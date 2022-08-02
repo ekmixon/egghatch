@@ -27,13 +27,8 @@ class Shellcode(object):
         self.extract_data()
 
     def to_dict(self):
-        ret = {
-            "bbl": [],
-            "text": [],
-            "data": [],
-        }
         self.analyze()
-        ret["bbl"] = sorted(self.bbl.items())
+        ret = {"text": [], "data": [], "bbl": sorted(self.bbl.items())}
         ret["text"] = sorted(self.insns)
         for idx, data in sorted(self.data.items()):
             ret["data"].append((idx, data.decode("latin1")))
@@ -61,7 +56,7 @@ class Shellcode(object):
         block.fallthrough = False
 
     def add_bbl(self, start, end):
-        bbl_r = dict((v, k) for k, v in self.bbl.items())
+        bbl_r = {v: k for k, v in self.bbl.items()}
         for start_, end_ in self.bbl.items():
             if start >= start_ and start < end_:
                 self.bbl[start_] = start
@@ -112,10 +107,7 @@ class Shellcode(object):
 
     def basic_taint(self):
         """Implements basic taint tracking to handle certain scenarios."""
-        insns = {}
-        for insn in self.insns:
-            insns[insn.addr] = insn
-
+        insns = {insn.addr: insn for insn in self.insns}
         # If this is a call/pop where the pop'd value is later call'd then the
         # "data" behind the call instruction is actually code.
         for insn1 in self.insns:

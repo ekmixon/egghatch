@@ -49,10 +49,10 @@ class Block(object):
         return True
 
     def to_dict(self):
-        ret = []
-        for addr, size, mnemonic, operands in self.insns:
-            ret.append((addr, mnemonic, operands))
-        return ret
+        return [
+            (addr, mnemonic, operands)
+            for addr, size, mnemonic, operands in self.insns
+        ]
 
     def addr(self, target):
         if target.startswith("0x") or target.isdigit():

@@ -27,7 +27,7 @@ def test_as_text_cld_jmpinf():
 
 def test_as_text_sc():
     def f(filename):
-        return open("tests/files/plain/%s" % filename, "rb").read()
+        return open(f"tests/files/plain/{filename}", "rb").read()
 
     assert f("1.bin.txt") == as_text(f("1.bin"))
     assert f("2.bin.txt") == as_text(f("2.bin"))

@@ -20,13 +20,13 @@ def parse(payload):
 def as_text(payload):
     ret, sc = [], Shellcode(payload).to_dict()
 
-    for start, end in sc["bbl"]:
-        ret.append((start, "bbl_0x%04x:" % start))
-    for addr, size, mnemonic, operands in sc["text"]:
-        ret.append((addr, "    0x%04x: %s %s" % (addr, mnemonic, operands)))
-    for off, data in sc["data"]:
-        ret.append((off, ".db %s" % str_as_db(data)))
+    ret.extend((start, "bbl_0x%04x:" % start) for start, end in sc["bbl"])
+    ret.extend(
+        (addr, "    0x%04x: %s %s" % (addr, mnemonic, operands))
+        for addr, size, mnemonic, operands in sc["text"]
+    )
 
+    ret.extend((off, f".db {str_as_db(data)}") for off, data in sc["data"])
     # Sort each newline. Precedence is identified by the (offset, index) tuple
     # where index indicates the index in the ret list, i.e., bbl has a higher
     # priority than the instructions.

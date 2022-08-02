@@ -15,7 +15,7 @@ def str_as_db(s):
     r2, idx = [], 0
     while idx < len(r1):
         if isinstance(r1[idx], (int, long)):
-            r2.append("%s" % r1[idx])
+            r2.append(f"{r1[idx]}")
             idx += 1
             continue
         jdx = idx
@@ -23,4 +23,4 @@ def str_as_db(s):
             idx += 1
         r2.append("'%s'" % "".join(r1[jdx:idx]))
 
-    return ",".join("%s" % x for x in r2)
+    return ",".join(f"{x}" for x in r2)
